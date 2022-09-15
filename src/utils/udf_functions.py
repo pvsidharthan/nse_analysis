@@ -1,80 +1,57 @@
-from pyspark.sql import DataFrame
+#from pyspark.sql import DataFrame
+from pyspark.sql.functions import udf
 
-def get_SalaryMixedFreq(SalaryRangeFrom, SalaryRangeTo) -> float:
+@udf
+def get_HourlySalaryUDF(SalaryRangeFrom, SalaryRangeTo, SalaryFrequency) -> float:
     """
         Description:
     
-        Create SalaryMixedFreq Column as follows:
+        Calculate SalaryMixedFreq as follows:
             When "Salary Range From" is not null and not 0, then calculate the midrange salary, i.e. sal = (min + (max - min)/2)
             else use "Salary Range To" as the salary
+            If SalaryRangeTo is not defined or 0 return None
 
-        :param SalaryRangeFrom:
-        :param SalaryRangeTo:
-        :return: SalaryMixedFreq
-
-    """
-    return_df = df.withColumn("SalaryMixedFreq",
-                                expr("""
-                                    case                              
-                                        when 
-                                            SalaryRangeFrom is null
-                                        then SalaryRangeTo
-                                        when 
-                                            SalaryRangeFrom == 0
-                                        then SalaryRangeTo
-                                        else
-                                            SalaryRangeFrom + (SalaryRangeTo - SalaryRangeFrom)/2
-                                    end
-                                """
-                                ))
-    return return_df("SalaryMixedFreq")
-
-def get_HourlySalary(SalaryFrequency,SalaryMixedFreq) -> float:
-    """
-        Description:
-
-        Create HourlySalary Column as follows:
+        Calculate HourlySalary as follows:
         
-           SalaryMixedFreq will be the yearly salary, Daily salary or hourly salary depending on "Salary Frequency"
+           SalaryMixedFreq will be the yearly salary, Daily salary or 
+           hourly salary depending on "Salary Frequency"
            Calculate HourlySalary based on "Salary Frequency":
            1 - "Hourly": set HourlySalary = SalaryMixedFreq
            2 - "Daily":  set HourlySalary = SalaryMixedFreq / 8 rounded to 2 dec places
            3 - "Annual": set HourlySalary = SalaryMixedFreq / 1757 rounded to 2 dec places
 
-        :param df: input dataframe
-
-        :return: HourlySalary
-
+        :param SalaryRangeFrom: col value of "Salary Range From"
+        :param SalaryRangeTo" col value of "Salary Range To"
+        :param SalaryFrequency" col value of "Salary Frequency"
+        
+        :return: HourlySalary as float
     """
-    return_df = df.withColumn("HourlySalary",
-                                expr("""
-                                    case
-                                        when 
-                                            SalaryFrequency == "Hourly"
-                                        then SalaryMixedFreq
-                                        when
-                                            SalaryFrequency == "Daily"
-                                        then
-                                            round(SalaryMixedFreq / 8,2)
-                                        else
-                                            round(SalaryMixedFreq / 1757,2)
-                                    end
-                            """
-                            ))
-    return return_df("HourlySalary")
+    SalaryMixedFreq = float(0)
 
-def get_degree():
-    """
-    regex = r'^(.*?)\s(\w*?)$'  
-df \  
-    .withColumn(
-        'postal_code',
-        regexp_extract(col('to_be_extracted'), regex, 1)
-    ) \  
-    .withColumn(
-        'city',
-        regexp_extract(col('to_be_extracted'), regex, 2)
-        """
-    return 1
+    if SalaryRangeTo is None:
+        return None    
+    if SalaryRangeTo == 0:
+        return None
+    if SalaryRangeFrom is None:      
+        SalaryMixedFreq = float(SalaryRangeTo)
+    elif SalaryRangeFrom == 0:
+        SalaryMixedFreq = float(SalaryRangeTo)
+    else:
+        SalaryMixedFreq = float(SalaryRangeFrom + (SalaryRangeTo - SalaryRangeFrom)/2)
+    # 
+    # Now we have SalaryMixedFreq, scale it dependent on Salary Frequency
+    #
+
+    if SalaryFrequency == "Hourly":
+        return SalaryMixedFreq
+    if SalaryFrequency == "Daily":
+        return round(SalaryMixedFreq / 8,2)
+    if SalaryFrequency == "Annual":
+        return round(SalaryMixedFreq / 1757,2)
+    # we should not get here as there are only 3 distinct SalaryFrequency's
+    # but for completeness: 
+    return None
+
+
 
 
