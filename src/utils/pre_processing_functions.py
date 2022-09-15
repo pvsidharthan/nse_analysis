@@ -34,3 +34,7 @@ def get_counts_map(df: DataFrame) -> dict :
     #   Business Title                  2946                None                None   
     counts_map = { k:int(v) for k,v in desc[0].items() if k != "summary" }
     return counts_map   
+
+
+if __name__ == "__main__":
+    pass
