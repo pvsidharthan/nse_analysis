@@ -8,25 +8,25 @@
 
 In `docker-compose.yml` file change the jupyter container as follows and (re)start the containts
 
-
+`docker compose -f ./docker-compose.yml --project-name my_assesment up`
 
 >
-  jupyter:
-    container_name: jupyter
-    image: arjones/pyspark:2.4.5
-    restart: always
-    environment:
-      MASTER: spark://master:7077
-    depends_on:
-      - master
-    ports:
-      - "8888:8888"
-    volumes:
-      - ./src/notebook:/notebook
-      - ./src/utils:/utils
-      - ./src/tests:/tests
-      - ./src/processed:/processed
-      - ./dataset:/dataset
+    jupyter:
+        container_name: jupyter
+        image: arjones/pyspark:2.4.5
+        restart: always
+        environment:
+        MASTER: spark://master:7077
+        depends_on:
+        - master
+        ports:
+        - "8888:8888"
+        volumes:
+        - ./src/notebook:/notebook
+        - ./src/utils:/utils
+        - ./src/tests:/tests
+        - ./processed:/processed
+        - ./dataset:/dataset
 
 # Data analysis
 
