@@ -1,6 +1,6 @@
 # MyDocument.md
 
-## Map /tests to "jupyter" container
+# Map /tests to "jupyter" container
 
 To segregate test code from "production code" map src/test -> /tests in the jupyter container as follows:
 
@@ -20,6 +20,12 @@ To segregate test code from "production code" map src/test -> /tests in the jupy
         - ./src/utils:/utils
         - ./src/tests:/tests
         - ./dataset:/dataset
+
+# Data analysis
+
+For data analysis click [data_analysis](src/notebook/data_analysis.ipynb)
+
+For data wrangling / pre-processing click [pre_processing_and_wrangling](src/notebook/pre_processing_and_wrangling.ipynb)
 
 ## Tests of UDF Functions
 
