@@ -23,5 +23,5 @@ To segregate test code from "production code" map src/test -> /tests in the jupy
 
 ## Tests of UDF Functions
 
-All UDF functions were tested [here](/notebooks/test%20UDF%20functions.ipynb)
+All UDF functions were tested [here](src/notebook/test%20UDF%20functions.ipynb)
 
