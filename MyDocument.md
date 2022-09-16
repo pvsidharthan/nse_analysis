@@ -1,25 +1,32 @@
 # MyDocument.md
 
-# Map /tests to "jupyter" container
+# Map new folders to "jupyter" container
 
-To segregate test code from "production code" map src/test -> /tests in the jupyter container as follows:
+- To segregate test code from "production code" map src/test -> /tests 
+
+- To save processed data map src/processed -> /processed
+
+In `docker-compose.yml` file change the jupyter container as follows and (re)start the containts
+
+
 
 >
-      jupyter:
-        container_name: jupyter
-        image: arjones/pyspark:2.4.5
-        restart: always
-        environment:
-        MASTER: spark://master:7077
-        depends_on:
-        - master
-        ports:
-        - "8888:8888"
-        volumes:
-        - ./src/notebook:/notebook
-        - ./src/utils:/utils
-        - ./src/tests:/tests
-        - ./dataset:/dataset
+  jupyter:
+    container_name: jupyter
+    image: arjones/pyspark:2.4.5
+    restart: always
+    environment:
+      MASTER: spark://master:7077
+    depends_on:
+      - master
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./src/notebook:/notebook
+      - ./src/utils:/utils
+      - ./src/tests:/tests
+      - ./src/processed:/processed
+      - ./dataset:/dataset
 
 # Data analysis
 

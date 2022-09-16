@@ -77,4 +77,5 @@ services:
       - ./src/notebook:/notebook
       - ./src/utils:/utils
       - ./src/tests:/tests
+      - ./src/processed:/processed
       - ./dataset:/dataset

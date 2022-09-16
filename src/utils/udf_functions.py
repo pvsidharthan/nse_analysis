@@ -1,5 +1,47 @@
 from pyspark.sql.functions import udf
 #from pyspark.sql.types import FloatType
+import re
+
+@udf
+def get_degreeUDF(MinimumQualRequirements) -> str:
+    """
+
+    From https://bestaccreditedcolleges.org/articles/list-of-degrees.html
+
+        Degree Order	Degree Type	Program Duration
+        ---------------------------------------------
+        Undergraduate	Associate's degree	2 years
+        Undergraduate	Bachelor's degree	4 years
+        Graduate	    Master's degree	1-2 years
+        Graduate	    Doctoral degree	5-7 years
+
+    :param MinimumQualRequirements" col value of "Minimum QualRequirements" 
+    
+    :return: high qualification as a string, e.g "Degree" is returned if the
+             text in MinimumQualRequirements contains the reuirement for a degree
+    """
+    re_flags = re.IGNORECASE | re.MULTILINE
+    associate_re = re.compile(r'.*?(\bAssociate\b).*?',re_flags)
+    baccalaureate_re = re.compile(r'.*?(\bBaccalaureate|\bBachelor|\bBSc\b|\bBA\b).*?',re_flags)
+    masters_re = re.compile(r'.*?(\bMaster|\bMSc\b|\bMA\b).*?',re_flags)
+    phd_re =  re.compile(r'.*?(\bDoctoral\b|\bdoctorate|\bPhd\b).*?',re_flags)
+
+    # These regex's are limited as follows:
+    #  if the Minimum Qual Requirements read:
+    #       "candidate should have at least a bachelors degree but masters preferred...."
+    # then the function here would match bachelors BEFORE masters and return that, i.e.
+    # the masters request would be ignored
+    #
+    if associate_re.match(MinimumQualRequirements):
+        return 'Associate'
+    if baccalaureate_re.match(MinimumQualRequirements):
+        return 'Degree'
+    if masters_re.match(MinimumQualRequirements):
+        return 'Masters'
+    if phd_re.match(MinimumQualRequirements):
+        return 'PhD'
+    return 'none'
+
 
 @udf(returnType='float')
 def get_HourlySalaryUDF(SalaryRangeFrom, SalaryRangeTo, SalaryFrequency) -> float:
