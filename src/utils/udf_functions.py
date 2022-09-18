@@ -32,6 +32,8 @@ def get_degreeUDF(MinimumQualRequirements) -> str:
     # then the function here would match bachelors BEFORE masters and return that, i.e.
     # the masters request would be ignored
     #
+    if MinimumQualRequirements is None:
+        return 'not_specified'
     if associate_re.match(MinimumQualRequirements):
         return 'Associate'
     if baccalaureate_re.match(MinimumQualRequirements):
@@ -40,7 +42,7 @@ def get_degreeUDF(MinimumQualRequirements) -> str:
         return 'Masters'
     if phd_re.match(MinimumQualRequirements):
         return 'PhD'
-    return 'none'
+    return 'not_specified'
 
 
 @udf(returnType='float')

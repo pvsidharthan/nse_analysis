@@ -44,27 +44,35 @@ def test_get_degreeUDF(debug: bool = False, inject_error: bool = False):
         ("blar A baccalaureate degree from an accredited ","Degree"),
         ("blar blar Bachelors degree needed","Degree"),
         ("blar blar BSc needed","Degree"),
-        ("word boundary test BScXXXX needed","none"),
-        ("word boundary test  YYYBSc needed","none"),
-        ("word boundary test  YYYBScZZZ needed","none"),
+        ("word boundary test BScXXXX needed","not_specified"),
+        ("word boundary test  YYYBSc needed","not_specified"),
+        ("word boundary test  YYYBScZZZ needed","not_specified"),
         ("blar blar BA needed","Degree"),
-        ("word boundary test BAXXXX needed","none"),
-        ("word boundary test YYYBA needed","none"),
-        ("word boundary test YYYBAZZZ needed","none"),
+        ("word boundary test BAXXXX needed","not_specified"),
+        ("word boundary test YYYBA needed","not_specified"),
+        ("word boundary test YYYBAZZZ needed","not_specified"),
         (" least a bachelors degree but masters preferred","Degree"),
         ("blar blar A master's degree from an accredited college in","Masters"),
         ("blar blar A masters degree from an accredited college in","Masters"),
-        ("word boundary test MScXXX degreee","none"),
-        ("word boundary test ZZZMSc degreee","none"),
-        ("word boundary test XXXMScXXX degreee","none"),
+        ("word boundary test MScXXX degreee","not_specified"),
+        ("word boundary test ZZZMSc degreee","not_specified"),
+        ("word boundary test XXXMScXXX degreee","not_specified"),
         ("blar blar Doctoral degree needed","PhD"),
         ("blar blar doctorate degree needed","PhD"),
         ("blar blar PhD needed","PhD"),
         ("blar blar phd needed","PhD"),
-        ("boundary test XXXPhD needed","none"),
-        ("boundary test PhDYYY needed","none"),
-        ("boundary test XXXPhDXXX needed","none"),
+        ("boundary test XXXPhD needed","not_specified"),
+        ("boundary test PhDYYY needed","not_specified"),
+        ("boundary test XXXPhDXXX needed","not_specified"),
     ]
+
+    if inject_error:
+        for err in [("blar Associate blar","not_specified"),
+                    ("blar blar Bachelors degree needed","not_specified"),
+                    ("blar blar A master's degree from an accredited college in","not_specified"),
+                    ("blar blar PhD needed","not_specified")]:
+            requirements.append(err)
+
 
     requirements_df = spark.createDataFrame(data = requirements, schema = requirements_schema)
     if debug:

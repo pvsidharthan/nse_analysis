@@ -4,8 +4,6 @@
 
 - To segregate test code from "production code" map src/test -> /tests 
 
-- To save processed data map src/processed -> /processed
-
 In `docker-compose.yml` file change the jupyter container as follows and (re)start the containts
 
 `docker compose -f ./docker-compose.yml --project-name my_assesment up`
@@ -25,7 +23,6 @@ In `docker-compose.yml` file change the jupyter container as follows and (re)sta
         - ./src/notebook:/notebook
         - ./src/utils:/utils
         - ./src/tests:/tests
-        - ./processed:/processed
         - ./dataset:/dataset
 
 # Data analysis
