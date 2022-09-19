@@ -76,5 +76,4 @@ services:
     volumes:
       - ./src/notebook:/notebook
       - ./src/utils:/utils
-      - ./src/tests:/tests
       - ./dataset:/dataset
