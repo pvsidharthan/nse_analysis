@@ -1,6 +1,9 @@
 from pyspark.sql import SparkSession
 from utils.distinct_values import get_distinct_values
 
+def loadTest():
+    " func to check functions here are loaded"
+    return True
 
 def spark_session():
     """Fixture for creating a spark context."""
